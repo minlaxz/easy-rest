@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -32,6 +34,7 @@ mongoose.connect(DB_CONN,
     });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+const HOST = '0.0.0.0'
+app.listen(PORT, HOST, () => {
     console.log(`Server is listening on port ${PORT}`);
 })
