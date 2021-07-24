@@ -38,7 +38,7 @@
 
 ### Thoughts
 
-![Screen Shot]('images/0.png')
+![Screen Shot](images/0.png)
 
 - Your _development environment_ is completely isolated in _docker containers_ also **in-sync** with the `code`
 - You could easily end up by simply dropping _compose file_ and _kool.yml_ to any working project and run `kool start`

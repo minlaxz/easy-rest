@@ -26,6 +26,7 @@
 - `kool logs <ServiceName>` look at [this service name](https://github.com/minlaxz/easy-rest/blob/41c7a102770e5bec4ddeab7dfbda83547660feb4/docker-compose.yml#L17) to see the logs `-f` flag to follow the logs
 
 ### Some examples
+
 - `kool run yarn` is equal to `yarn` so you guess it
 - `kool run yarn add -D nodemon` === `yarn add -D nodemon`
 - `kool run node -v` === `node -v`
@@ -35,13 +36,13 @@
 - maybe you could not stop the express by CTRL+C, but you can stop and remove the conatiner completely it by `kool stop`
 - or some hack, _`docker stop` the container_ if you know what you are doing
 
-
 ### Thoughts
+
+![Screen Shot](docs/images/0.png)
 
 - Your _development environment_ is completely isolated in _docker containers_ also **in-sync** with the `code`
 - You could easily end up by simply dropping _compose file_ and _kool.yml_ to any working project and run `kool start`
-- __The magic happen__
+- **The magic happen**
 - Eh, you can also debug as you would do in a normal project and yup this is insane project
 
-It's always a good practice to check `.env` and `compose file` for any necessary changes
-===
+# It's always a good practice to check `.env` and `compose file` for any necessary changes
