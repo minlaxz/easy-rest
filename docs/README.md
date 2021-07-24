@@ -38,12 +38,12 @@
 
 ### Thoughts
 
-![SS]('https://raw.githubusercontent.com/minlaxz/easy-rest/main/docs/images/0.png')
+![Screen Shot]('https://github.com/minlaxz/easy-rest/blob/main/docs/images/0.png?raw=true')
 
 - Your _development environment_ is completely isolated in _docker containers_ also **in-sync** with the `code`
 - You could easily end up by simply dropping _compose file_ and _kool.yml_ to any working project and run `kool start`
 - __The magic happen__
 - Eh, you can also debug as you would do in a normal project and yup this is insane project
 
-It's always a good practice to check `.env` and compose file for any necessary changes
+It's always a good practice to check `.env` and `compose file` for any necessary changes
 ===

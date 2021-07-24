@@ -43,5 +43,5 @@
 - __The magic happen__
 - Eh, you can also debug as you would do in a normal project and yup this is insane project
 
-It's always a good practice to check `.env` and compose file for any necessary changes
+It's always a good practice to check `.env` and `compose file` for any necessary changes
 ===
