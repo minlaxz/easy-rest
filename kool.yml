@@ -1,0 +1,4 @@
+scripts:
+  node: kool exec app node
+  setup: kool start
+  yarn: kool exec app yarn
