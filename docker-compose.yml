@@ -9,18 +9,25 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       # - MONGO_INITDB_DATABASE=laxzdb
     volumes:
-      - /home/laxz/testLabs/SaaS-PaaS/Dockers/mongoDB/db:/data/db
+      - ${DB_PATH}:/data/db
     ports:
-      - "27017:27017" # to access from compass
+      - "27017:27017" # to access from mongo compass
     networks:
       - api-network
-  node-api:
-    build: .
+  api-app:
+    # build: .
+    image: node:alpine
     container_name: s-api-app
-    depends_on:
-      - mongo
+    command: ["yarn", "${RUNNING_MODE}"]
     ports:
       - "3003:3001"
+    environment: 
+      UID: "${UID:-0}"
+    working_dir: /app
+    volumes: 
+      - .:/app:delegated
+    depends_on:
+      - mongo
     networks:
       - api-network
 
