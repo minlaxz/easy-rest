@@ -23,7 +23,7 @@
 
 ### Logging
 
-- `kool logs` to see the logs `-f` flag to follow the logs
+- `kool logs <ServiceName>` look at [this service name](https://github.com/minlaxz/easy-rest/blob/41c7a102770e5bec4ddeab7dfbda83547660feb4/docker-compose.yml#L17) to see the logs `-f` flag to follow the logs
 
 ### Some examples
 - `kool run yarn` is equal to `yarn` so you guess it
@@ -33,6 +33,7 @@
 ### Some drawbacks
 
 - maybe you could not stop the express by CTRL+C, but you can stop and remove the conatiner completely it by `kool stop`
+- or some hack, _`docker stop` the container_ if you know what you are doing
 
 
 ### Thoughts
