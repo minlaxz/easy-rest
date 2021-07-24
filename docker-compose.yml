@@ -3,28 +3,28 @@ version: "3.7"
 services:
   mongo:
     image: mongo
-    container_name: s-api-mongo
+    # container_name: s-api-mongo # let 'kool' handle the container name
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       # - MONGO_INITDB_DATABASE=laxzdb
     volumes:
       - ${DB_PATH}:/data/db
-    ports:
-      - "27017:27017" # to access from mongo compass
+    # ports:
+      # - "27017:27017" # to access from mongo compass
     networks:
       - api-network
   api-app:
-    # build: .
+    # build: . # let omit the dockerfile build steps
     image: node:alpine
-    container_name: s-api-app
+    # container_name: easy-rest_api-app_1 # let 'kool' handle the container name
     command: ["yarn", "${RUNNING_MODE}"]
     ports:
       - "3003:3001"
-    environment: 
+    environment:
       UID: "${UID:-0}"
     working_dir: /app
-    volumes: 
+    volumes:
       - .:/app:delegated
     depends_on:
       - mongo
