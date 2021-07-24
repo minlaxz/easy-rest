@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  mongo:
+    image: mongo
+    container_name: s-api-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      # - MONGO_INITDB_DATABASE=laxzdb
+    volumes:
+      - /home/laxz/testLabs/SaaS-PaaS/Dockers/mongoDB/db:/data/db
+    ports:
+      - "27017:27017" # to access from compass
+    networks:
+      - api-network
+  node-api:
+    build: .
+    container_name: s-api-app
+    depends_on:
+      - mongo
+    ports:
+      - "3003:3001"
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    external: true

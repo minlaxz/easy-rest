@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 app.use('/api/friend', friendRoutes);
 app.use('/api/protected', protectedRoutes);
 
-const DB_CONN = 'mongodb://localhost:27017/laxzdb';
+const DB_CONN = 'mongodb://mongo:27017/laxzdb';
 mongoose.connect(DB_CONN,
     {
         useNewUrlParser: true,
