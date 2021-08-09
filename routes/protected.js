@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'my super duper secret';
 
 router.get('/', (req, res) => {
-    res.status(200).json({ response: 'Welcome to protected endpoint.' });
+    res.status(200).json({ response: 'Welcome to protected endpoint. go to protected/sensitive' });
 })
 
 router.post('/login', (req, res) => {
