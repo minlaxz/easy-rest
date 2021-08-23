@@ -53,6 +53,6 @@ const verifyToken = (req, res, next) => {
 }
 
 router.get('/sensitive', verifyToken, (req, res) => {
-    res.status(200).json({ response: `This is a sensitive resource. ${req.decoded}` });
+    res.status(200).json({ response: `This is a sensitive resource. ${JSON.stringify(req.decoded)}` });
 })
 module.exports = [router];

@@ -1,13 +1,11 @@
-'use strict';
-
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const friendRoutes = require('./routes/friend');
-const protectedRoutes = require('./routes/protected');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import friendRoutes from './routes/friendRoute.js';
+// import protectedRoutes from './routes/protected.js';
 
 const app = express();
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // parsing request of content-type as application/json
 app.use(express.json());
@@ -16,8 +14,9 @@ app.get('/', (req, res) => {
     res.status(200).send('Hello World!!');
 });
 
-app.use('/api/friend', friendRoutes);
-app.use('/api/protected', protectedRoutes);
+app.use('/friend', friendRoutes);
+// app.use('/protected', protectedRoutes);
+// app.use('/user', )
 
 const DB_CONN = 'mongodb://mongo:27017/laxzdb';
 mongoose.connect(DB_CONN,
@@ -28,13 +27,8 @@ mongoose.connect(DB_CONN,
         "user": "laxzadmin",
         "pass": "laxzsecret"
     }).then(() => {
-        console.log('MongoDB connected');
+        const PORT = process.env.PORT || 3001;
+        app.listen(PORT, '0.0.0.0', () => console.log(`Server started at port ${PORT}`));
     }).catch((err) => {
         console.log('MongoDB connection error: ', err);
     });
-
-const PORT = process.env.PORT || 3001;
-const HOST = '0.0.0.0'
-app.listen(PORT, HOST, () => {
-    console.log(`Server is listening on port ${PORT}`);
-})

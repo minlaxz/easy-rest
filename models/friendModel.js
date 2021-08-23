@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const FriendSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -18,5 +17,5 @@ const FriendSchema = new mongoose.Schema({
         default: Date.now
     }
 })
-
-module.exports = mongoose.model('laxzcols', FriendSchema);
+const Friend = mongoose.model('laxzcols', FriendSchema);
+export default Friend;

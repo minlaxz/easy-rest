@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import Friend from '../models/friendModel.js';
+import { getFriends } from '../controllers/friendController.js';
+
 const router = express.Router();
-const Friend = require('../models/friend');
 
 router.post('/', (req, res) => {
     let friend = new Friend({
@@ -17,14 +19,7 @@ router.post('/', (req, res) => {
         })
 })
 
-router.get('/', (req, res) => {
-    Friend.find()
-        .then(data => {
-            res.status(200).json({ 'response': data });
-        }).catch(err => {
-            res.status(500).json({ 'response': err });
-        })
-})
+router.get('/', getFriends);
 
 router.get('/:id', (req, res) => {
     console.log("Searching id = %s", req.params.id);
@@ -70,4 +65,4 @@ router.patch('/:id', (req, res) => {
     });
 })
 
-module.exports = router;
+export default router;
