@@ -1,8 +1,23 @@
 import express from 'express';
 import Friend from '../models/friendModel.js';
-import { getFriends } from '../controllers/friendController.js';
+import { deleteAFriend, getAFriend, getFriends, updateAFriend } from '../controllers/friendController.js';
 
 const router = express.Router();
+
+router.use('/:id', (req, res, next) => {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        next();
+    } else {
+        const error = new Error('Invalid id');
+        error.status = 400;
+        next(error);
+    }
+});
+
+router.get('/', getFriends);
+router.get('/:id', getAFriend);
+router.delete('/:id', deleteAFriend);
+router.patch('/:id', updateAFriend);
 
 router.post('/', (req, res) => {
     let friend = new Friend({
@@ -19,50 +34,16 @@ router.post('/', (req, res) => {
         })
 })
 
-router.get('/', getFriends);
 
-router.get('/:id', (req, res) => {
-    console.log("Searching id = %s", req.params.id);
-    Friend.findById(req.params.id)
-        .then(response => {
-            if (!response) {
-                res.status(404).json({ 'response': 'Resource Not found' });
-            } else {
-                res.status(200).json({ 'response': response });
-            }
-        }).catch(err => {
-            res.status(500).json({ 'response': err });
-        })
-})
-
-router.delete('/:id', (req, res) => {
-    console.log("Deleting id = %s", req.params.id);
-    Friend.deleteOne({ _id: req.params.id })
-        .then(response => {
-            if (!response) {
-                res.status(404).json({ 'response': 'Resource Not found' });
-            } else {
-                res.status(200).json({ 'response': response });
-            }
-        }).catch(err => {
-            res.status(500).json({ 'response': err });
-        })
-})
-
-router.patch('/:id', (req, res) => {
-    console.log("Updating id = %s", req.params.id);
-    Friend.updateOne(
-        { _id: req.params.id },
-        req.body.phone ? { $set: { phone: req.body.phone } } : console.log('Nothing to update'),
-    ).then(response => {
-        if (!response) {
-            res.status(404).json({ 'response': 'Resource Not found' });
-        } else {
-            res.status(200).json({ 'response': response });
-        }
-    }).catch(err => {
-        res.status(500).json({ 'response': err });
+// my super duper error handler
+router.use((error, req, res, next) => {
+    console.log(error.stack);
+    if (res.headersSent) {
+        return next(error);
+    }
+    res.status(error?.status || 500).send({
+        message: error?.message || 'Internal Server Error'
     });
-})
+});
 
 export default router;

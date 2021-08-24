@@ -1,4 +1,4 @@
 scripts:
-  node: kool exec app node
+  node: kool exec api-app node
   setup: kool start
-  yarn: kool exec app yarn
+  yarn: kool exec api-app yarn

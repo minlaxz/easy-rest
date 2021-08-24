@@ -10,18 +10,20 @@ services:
       # - MONGO_INITDB_DATABASE=laxzdb
     volumes:
       - ${DB_PATH}:/data/db
-    # ports:
-      # - "27017:27017" # to access from mongo compass
+    ports:
+      - "27017:27017" # to access from mongo compass
     networks:
       - api-network
   api-app:
     # build: . # let omit the dockerfile build steps
-    image: node:alpine
+    image: kooldev/node:14 # node:alpine
     # container_name: easy-rest_api-app_1 # let 'kool' handle the container name
     command: ["yarn", "${RUNNING_MODE}"]
     ports:
-      - "3003:3001"
+      - "${KOOL_APP_PORT:-3003}:3001"
+      - "${KOOL_APP_PORT:-3005}:3002"
     environment:
+      ASUSER: "${KOOL_ASUSER:-0}"
       UID: "${UID:-0}"
     working_dir: /app
     volumes:
