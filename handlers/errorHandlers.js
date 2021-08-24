@@ -27,6 +27,7 @@ export const devErrors = (err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
+    console.log(err);
     err.stack = err?.statck || "";
     const errorDetails = {
         message: err.message,

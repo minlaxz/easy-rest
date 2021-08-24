@@ -4,6 +4,8 @@ import friendRoutes from './routes/friendRoute.js';
 import path from 'path';
 import * as handlers from './handlers/errorHandlers.js'
 import protectedRoutes from './routes/protectedRoute.js';
+import userRoutes from './routes/userRoute.js';
+
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -48,6 +50,7 @@ app.get('/', (req, res) => {
 
 app.use('/friend', friendRoutes);
 app.use('/protected', protectedRoutes);
+app.use('/user', userRoutes);
 
 
 // If that above routes didnt work, 404 them and forward to error handler

@@ -18,6 +18,8 @@ mongoose.connect(process.env.DB_CONN,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useCreateIndex: true, // https://stackoverflow.com/a/51962721/10582082
+        useFindAndModify: false,
         "auth": { "authSource": "admin" },
         "user": "laxzadmin",
         "pass": "laxzsecret"
@@ -36,5 +38,5 @@ mongoose.connection.on("error", (err) => {
 
 app.set("port", process.env.PORT || 3001);
 const server = app.listen(app.get("port"), () => {
-    console.log(`🚀 Server is listening on ${server.address()?.address}${server.address()?.port}`);
+    console.log(`🚀 Server is listening on port ${server.address()?.port}`);
 });
