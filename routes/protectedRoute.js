@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import jwt from 'jsonwebtoken';
 
+const router = express.Router();
 const SECRET_KEY = 'my super duper secret';
 
 router.get('/', (req, res) => {
@@ -14,7 +14,7 @@ router.post('/login', (req, res) => {
         res.status(400).json({ response: 'Username is required.' });
     } else {
         if (req.body.username !== 'minlaxz') {
-            res.status(403).json({ response: 'Access denied.' });
+            res.status(403).json({ response: 'Access denied. 👻' });
         } else {
             let payload = {
                 sub: req.body.username,
@@ -35,7 +35,7 @@ const splitToken = (token) => {
     }
 }
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     if (!req.headers.authorization) {
         res.status(401).json({ response: 'Unauthorized.' });
     } else {
@@ -52,7 +52,8 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-router.get('/sensitive', verifyToken, (req, res) => {
+router.get('/sensitive', verifyToken, async (req, res) => {
     res.status(200).json({ response: `This is a sensitive resource. ${JSON.stringify(req.decoded)}` });
 })
-module.exports = [router];
+
+export default router;

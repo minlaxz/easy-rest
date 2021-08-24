@@ -48,8 +48,8 @@ export const prodErrors = (err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
-    res.status(500).json({
-        success: false,
-        message: "Guess what, this is internal error 🥴"
+    res.status(err.status || 500).json({
+        success: err.success || false,
+        message: err.message || `Guess what, this is internal error 🥴`
     });
 };

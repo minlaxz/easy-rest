@@ -10,7 +10,7 @@ const unexceptedError = (err) => {
 export const getFriends = async (req, res, next) => {
     await Friend.find()
         .then(data => {
-            res.status(200).json({ 'response': data });
+            res.status(200).json({ success: true, message: data });
         }).catch(err => next(unexceptedError(err)));
 }
 
@@ -19,9 +19,9 @@ export const getAFriend = async (req, res, next) => {
     await Friend.findById(req.params.id)
         .then(response => {
             if (!response) {
-                res.status(404).json({ 'response': 'Resource Not found' });
+                res.status(404).json({ success: false, message: 'Resource Not found' });
             } else {
-                res.status(200).json({ 'response': response });
+                res.status(200).json({ success: true, message: response });
             }
         }).catch(err => next(unexceptedError(err)));
 }
@@ -30,9 +30,9 @@ export const deleteAFriend = async (req, res, next) => {
     await Friend.deleteOne({ _id: req.params.id })
         .then(response => {
             if (!response) {
-                res.status(404).json({ 'response': 'Resource Not found' });
+                res.status(404).json({ success: false, message: 'Resource Not found' });
             } else {
-                res.status(200).json({ 'response': response });
+                res.status(200).json({ success: true, message: response });
             }
         }).catch(err => next(unexceptedError(err)));
 }
@@ -43,9 +43,9 @@ export const updateAFriend = async (req, res, next) => {
         req.body.phone ? { $set: { phone: req.body.phone } } : console.log('Nothing to update'),
     ).then(response => {
         if (!response) {
-            res.status(404).json({ 'response': 'Resource Not found' });
+            res.status(404).json({ success: false, message: 'Resource Not found' });
         } else {
-            res.status(200).json({ 'response': response });
+            res.status(200).json({ success: true, message: response });
         }
     }).catch(err => next(unexceptedError(err)));
 }

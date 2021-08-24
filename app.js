@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import friendRoutes from './routes/friendRoute.js';
 import path from 'path';
-import { devErrors, notFound, prodErrors } from './handlers/errorHandlers.js';
-
+import * as handlers from './handlers/errorHandlers.js'
+import protectedRoutes from './routes/protectedRoute.js';
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 //     })
 //   );
 
-// pass variables to our templates + all requests
+// pass variables to templates + all requests
 // app.use((req, res, next) => {
 //     res.locals.admin = req.admin || null;
 //     res.locals.currentPath = req.path;
@@ -47,17 +47,19 @@ app.get('/', (req, res) => {
 });
 
 app.use('/friend', friendRoutes);
-// app.use('/protected', protectedRoutes);
-// app.use('/user', )
+app.use('/protected', protectedRoutes);
 
-app.use(notFound);
 
+// If that above routes didnt work, 404 them and forward to error handler
+app.use(handlers.notFound);
+
+// Otherwise this was a really bad unexpected error
 if (app.get("env") === "development") {
     /* Development Error Handler - Prints stack trace */
-    app.use(devErrors);
+    app.use(handlers.devErrors);
 }
 
 // production error handler
-app.use(prodErrors);
+app.use(handlers.prodErrors);
 
 export default app;
