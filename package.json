@@ -5,8 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index",
-    "start": "node index"
+    "dev": "nodemon ./server.js --ignore public/",
+    "start": "NODE_ENV=production node ./server.js"
   },
   "keywords": [
     "nodejs",
