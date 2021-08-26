@@ -19,7 +19,7 @@ export const userRegisterValidator = async (data) => {
     return schema.validate(data);
 }
 
-export const userLoginValidator = (data) => {
+export const userLoginValidator = async (data) => {
     const schema = Joi.object({
         email: Joi.string()
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })

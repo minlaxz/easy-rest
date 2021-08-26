@@ -10,6 +10,6 @@ router.get('/', async (req, res, next)=> {
     })
 })
 router.post('/signup', userController.registerUser);
-// router.post('/login', userController.loginUser);
+router.post('/login', userController.loginUser);
 
 export default router;

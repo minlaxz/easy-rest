@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-
+import { AuthVerifier } from '../Auth/AuthVerifier.js';
 const router = express.Router();
 const SECRET_KEY = 'my super duper secret';
 
@@ -54,6 +54,10 @@ const verifyToken = async (req, res, next) => {
 
 router.get('/sensitive', verifyToken, async (req, res) => {
     res.status(200).json({ response: `This is a sensitive resource. ${JSON.stringify(req.decoded)}` });
+})
+
+router.get('/super', AuthVerifier, async (req, res) => {
+    res.status(200).json({ response: 'This is a super secret resource.', user: req.user });
 })
 
 export default router;
