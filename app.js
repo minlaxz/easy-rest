@@ -5,6 +5,7 @@ import path from 'path';
 import * as handlers from './handlers/errorHandlers.js'
 import protectedRoutes from './routes/protectedRoute.js';
 import userRoutes from './routes/userRoute.js';
+import notFoundRoutes from './routes/404Route.js';
 
 const app = express();
 
@@ -18,6 +19,15 @@ app.use(express.static(path.join(__dirname, "public")));
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+// Set 'views' directory for any views 
+// being rendered res.render()
+app.set('views', path.join(__dirname, 'public/views'));
+
+// Set view engine as EJS
+// app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 
 // Sessions allow us to Contact data on visitors from request to request
 // This keeps admins logged in and allows to send flash messages
@@ -51,6 +61,7 @@ app.get('/', (req, res) => {
 app.use('/friend', friendRoutes);
 app.use('/protected', protectedRoutes);
 app.use('/user', userRoutes);
+app.use('/notfound', notFoundRoutes);
 
 
 // If that above routes didnt work, 404 them and forward to error handler

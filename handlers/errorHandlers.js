@@ -17,10 +17,7 @@ export const catchErrors = (fn) => {
 
 
 export const notFound = (req, res, next) => {
-    res.status(404).json({
-        success: false,
-        message: "Resource could not be found."
-    });
+    res.status(302).redirect('/notfound?type=route');
 };
 
 export const devErrors = (err, req, res, next) => {
@@ -28,7 +25,8 @@ export const devErrors = (err, req, res, next) => {
         return next(err);
     }
     console.log(err);
-    err.stack = err?.statck || "";
+    err.stack = err.stack ? err.stack : ""
+    // err.stack = err?.statck || "";
     const errorDetails = {
         message: err.message,
         status: err.status,

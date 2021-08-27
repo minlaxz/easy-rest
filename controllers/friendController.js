@@ -7,6 +7,10 @@ const unexceptedError = (err) => {
     return error;
 }
 
+const noFriendFound = (req, res) => {
+    res.status(302).redirect('/notfound?type=friend');
+}
+
 export const getFriends = async (req, res, next) => {
     await Friend.find()
         .then(data => {
@@ -18,22 +22,16 @@ export const getAFriend = async (req, res, next) => {
     // mongoose.Types.ObjectId.isValid(id)
     await Friend.findById(req.params.id)
         .then(response => {
-            if (!response) {
-                res.status(404).json({ success: false, message: 'Resource Not found' });
-            } else {
-                res.status(200).json({ success: true, message: response });
-            }
+            if (!response) return noFriendFound(req, res);
+            res.status(200).json({ success: true, message: response });
         }).catch(err => next(unexceptedError(err)));
 }
 
 export const deleteAFriend = async (req, res, next) => {
     await Friend.deleteOne({ _id: req.params.id })
         .then(response => {
-            if (!response) {
-                res.status(404).json({ success: false, message: 'Resource Not found' });
-            } else {
-                res.status(200).json({ success: true, message: response });
-            }
+            if (!response) return noFriendFound(req, res);
+            res.status(200).json({ success: true, message: response });
         }).catch(err => next(unexceptedError(err)));
 }
 
@@ -42,10 +40,7 @@ export const updateAFriend = async (req, res, next) => {
         { _id: req.params.id },
         req.body.phone ? { $set: { phone: req.body.phone } } : console.log('Nothing to update'),
     ).then(response => {
-        if (!response) {
-            res.status(404).json({ success: false, message: 'Resource Not found' });
-        } else {
-            res.status(200).json({ success: true, message: response });
-        }
+        if (!response) return noFriendFound(req, res);
+        res.status(200).json({ success: true, message: response });
     }).catch(err => next(unexceptedError(err)));
 }

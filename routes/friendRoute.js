@@ -1,16 +1,17 @@
 import express from 'express';
 import Friend from '../models/friendModel.js';
 import { deleteAFriend, getAFriend, getFriends, updateAFriend } from '../controllers/friendController.js';
-
 const router = express.Router();
 
 router.use('/:id', (req, res, next) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         next();
     } else {
-        const error = new Error('Invalid id');
-        error.status = 400;
-        next(error);
+        res.status(302).redirect('/notfound?type=friend_id');
+        /* below is testing invalid ID  Error raiser */
+        // const error = new Error('Invalid id');
+        // error.status = 400;
+        // next(error);
     }
 });
 
