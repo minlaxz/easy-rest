@@ -1,6 +1,6 @@
 import express from 'express';
-import Friend from '../models/friendModel.js';
-import { deleteAFriend, getAFriend, getFriends, updateAFriend } from '../controllers/friendController.js';
+import * as friendController from '../controllers/friendController.js';
+
 const router = express.Router();
 
 router.use('/:id', (req, res, next) => {
@@ -8,31 +8,17 @@ router.use('/:id', (req, res, next) => {
         next();
     } else {
         res.status(302).redirect('/notfound?type=friend_id');
-        /* below is testing invalid ID  Error raiser */
+        /* to simulate an error stack */
         // const error = new Error('Invalid id');
         // error.status = 400;
         // next(error);
     }
 });
 
-router.get('/', getFriends);
-router.get('/:id', getAFriend);
-router.delete('/:id', deleteAFriend);
-router.patch('/:id', updateAFriend);
-
-router.post('/', (req, res) => {
-    let friend = new Friend({
-        name: req.body.name,
-        phone: req.body.phone,
-        email: req.body.email,
-        accessLevel: req.body.accessLevel
-    });
-    friend.save()
-        .then(data => {
-            res.status(201).json({ 'response': data });
-        }).catch(err => {
-            res.status(500).json({ 'response': err });
-        })
-})
+router.get('/', friendController.getFriends);
+router.get('/:id', friendController.getAFriend);
+router.delete('/:id', friendController.deleteAFriend);
+router.patch('/:id', friendController.updateAFriend);
+router.post('/', friendController.postAFriend);
 
 export default router;

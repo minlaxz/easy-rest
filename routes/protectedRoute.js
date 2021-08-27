@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthVerifier } from '../Auth/AuthVerifier.js';
+import { AuthVerifier } from '../auth/authVerifier.js';
 const router = express.Router();
 const SECRET_KEY = 'my super duper secret';
 

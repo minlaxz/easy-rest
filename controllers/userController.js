@@ -75,4 +75,5 @@ export const loginUser = async (req, res, next) => {
             }); /* response */
         }); /* bcrypt.hash */
     }); /* bcrypt.compare */
+    /* frontend need to store hashed user id */
 }

@@ -7,12 +7,12 @@ WORKDIR /usr/src/app
 COPY package.json ./
 
 #Install dependencies
-RUN yarn 
+RUN yarn install
 
 #Copy remaining files
 COPY . .
 
 EXPOSE 3001
 
-CMD [ "yarn", "dev" ]
+CMD [ "node", "server.js" ]
 

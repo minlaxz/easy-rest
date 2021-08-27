@@ -17,5 +17,5 @@ const FriendSchema = new mongoose.Schema({
         default: Date.now
     }
 })
-const Friend = mongoose.model('laxzcols', FriendSchema);
+const Friend = mongoose.model('friends', FriendSchema);
 export default Friend;

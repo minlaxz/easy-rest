@@ -13,7 +13,7 @@ export const userRegisterValidator = async (data) => {
             .required(),
 
         email: Joi.string()
-            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'dev', 'org'] } })
             .required()
     });
     return schema.validate(data);
@@ -22,7 +22,7 @@ export const userRegisterValidator = async (data) => {
 export const userLoginValidator = async (data) => {
     const schema = Joi.object({
         email: Joi.string()
-            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'dev', 'org'] } })
             .required(),
         password: Joi.string()
             .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))

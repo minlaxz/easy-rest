@@ -18,6 +18,7 @@ export const AuthVerifier = async (req, res, next) => {
             });
         }
         req.user = decoded;
+        // TODO? frontend need to store hashed user id
         next();
     });
 }

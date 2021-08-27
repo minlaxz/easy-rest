@@ -14,15 +14,15 @@ if (major < 10 || (major === 10 && minor <= 0)) {
 }
 
 dotenv.config({ path: "./.env" });
-mongoose.connect(process.env.DB_CONN,
+mongoose.connect(process.env.NODE_ENV === "development" ? process.env.CLOUD_DB_CONN : process.env.CLOUD_DB_CONN,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true, // https://stackoverflow.com/a/51962721/10582082
         useFindAndModify: false,
-        "auth": { "authSource": "admin" },
-        "user": "laxzadmin",
-        "pass": "laxzsecret"
+        // "auth": { "authSource": "admin" },
+        // "user": "laxzadmin",
+        // "pass": "laxzsecret"
     })
     .then(() => console.log("DB connected."))
     .catch((err) => console.log('MongoDB connection error: ', err));
