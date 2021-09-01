@@ -1,7 +1,8 @@
 import User from '../models/userModel.js';
 import * as validators from '../validators/userValidator.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
+import { hashPassword } from '../utils/passwordUtil.js';
+import passport from 'passport';
 
 // My super duper error handler
 const unexceptedError = (err) => {
@@ -16,35 +17,33 @@ export const registerUser = async (req, res, next) => {
     // Validate the request
     try {
         const { error } = await validators.userRegisterValidator(req.body);
-        if (error) return res.status(400).json({ success: false, error: error.details[0].message });
+        if (error) return res.status(400).json({ success: false, message: error.details[0].message });
     } catch (err) {
         next(unexceptedError(err));
     }
     // Check if the user already exists
     const user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send('Email is already registered');
+    if (user) return res.status(400).json({ success: false, message: 'Email is already registered' });
 
     // Hash the password
-    const saltRounds = 10;
-    bcrypt.hash(req.body.password, saltRounds, async (err, hashed) => {
-        if (err) return next(unexceptedError(err));
-        const newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashed
-        });
-        await newUser.save()
-            .then(user => {
-                res.status(201).send({
-                    success: true,
-                    message: 'User created successfully',
-                    userID: user._id,
-                })
+    // let hashed = await bcrypt.hash(req.body.password, 10)
+    const hashed = await hashPassword(req.body.password, 10);
+    const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: hashed
+    })
+    await newUser.save()
+        .then(user => {
+            res.status(201).json({
+                success: true,
+                message: 'User created successfully',
+                user: user
             })
-            .catch(err => {
-                next(unexceptedError(err));
-            });
-    });
+        })
+        .catch(err => {
+            next(unexceptedError(err));
+        });
 }
 
 
@@ -57,23 +56,21 @@ export const loginUser = async (req, res, next) => {
     } catch (error) {
         next(unexceptedError(error));
     }
-    // Check if the user already exists
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).json({ success: false, message: 'User not found' });
+    passport.authenticate('local', { failureRedirect: '/user/login-fail', successRedirect: '/user/login-success' })
+        (req, res, next);
 
-    // Check if the password is correct
-    bcrypt.compare(req.body.password, user.password, (err, result) => {
-        if (err) return next(unexceptedError(err));
-        if (!result) return res.status(400).json({ success: false, message: 'Invalid password' });
-        const saltRounds = 10;
-        bcrypt.hash(user._id.toString(), saltRounds, async (err, hashed) => {
-            if (err) return next(unexceptedError(err));
-            const authToken = jwt.sign({ _id: hashed }, process.env.JWT_SECRET); //, { expiresIn: '1h' });
-            res.header({ "auth-token": authToken }).status(200).json({
-                success: true,
-                message: 'User logged in successfully',
-            }); /* response */
-        }); /* bcrypt.hash */
-    }); /* bcrypt.compare */
+    /* Check if the user already exists*/
+    // const user = await User.findOne({ email: req.body.email });
+    // if (!user) return res.status(400).json({ success: false, message: 'User not found' });
+
+    /* Check if the password is correct */
+    // const validPassword = await validatePassword(req.body.password, user.password);
+    // if (!validPassword) return res.status(400).json({ success: false, message: 'Invalid password' });
+    // const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    // res.header({ "auth-token": token }).status(200).json({
+    //     success: true,
+    //     message: 'User logged in successfully',
+    //     token: token
+    // });
     /* frontend need to store hashed user id */
 }

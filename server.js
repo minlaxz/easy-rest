@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import app from './app.js';
 // import glob from 'glob';
 // import path from 'path';
-import app from './app.js';
 
 // Make sure it is node 10.0+
 const [major, minor] = process.versions.node.split(".").map(parseFloat);
@@ -14,7 +14,9 @@ if (major < 10 || (major === 10 && minor <= 0)) {
 }
 
 dotenv.config({ path: "./.env" });
-mongoose.connect(process.env.NODE_ENV === "development" ? process.env.CLOUD_DB_CONN : process.env.CLOUD_DB_CONN,
+
+let DB_CONN = process.env.CLOUD_DB_CONN;
+mongoose.connect(DB_CONN, //closure
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -24,7 +26,7 @@ mongoose.connect(process.env.NODE_ENV === "development" ? process.env.CLOUD_DB_C
         // "user": "laxzadmin",
         // "pass": "laxzsecret"
     })
-    .then(() => console.log("DB connected."))
+    .then(() => console.log("DB is connected."))
     .catch((err) => console.log('MongoDB connection error: ', err));
 
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises

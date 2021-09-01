@@ -17,7 +17,7 @@ export const catchErrors = (fn) => {
 
 
 export const notFound = (req, res, next) => {
-    res.status(302).redirect('/notfound?type=route');
+    res.status(302).redirect(`/notfound?type=route&path=${req.path}`);
 };
 
 export const devErrors = (err, req, res, next) => {
@@ -49,6 +49,6 @@ export const prodErrors = (err, req, res, next) => {
     }
     res.status(err.status || 500).json({
         success: err.success || false,
-        message: err.message || `Guess what, this is internal error 🥴`
+        message: err.message || `Guess what, this is internal error please report.`
     });
 };

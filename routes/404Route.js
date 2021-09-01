@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
             message = '404: Friend with that ID cannot be found :(';
             break;
         case "route":
-            message = '404: That Route cannot be found :(';
+            message = `404: That Route cannot be found :( ${req.query.path ?? ""}`;
             break;
         case "friend_id":
             message = '404: I think friend ID is imcompleted :(';
