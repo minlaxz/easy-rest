@@ -6,11 +6,16 @@ import * as handlers from './handlers/errorHandlers.js'
 import protectedRoutes from './routes/protectedRoute.js';
 import userRoutes from './routes/userRoute.js';
 import notFoundRoutes from './routes/404Route.js';
+import dotenv from 'dotenv';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import './auth/passportConfig.js';
 
 const app = express();
+dotenv.config({ path: "./.env" });
 
 app.use(cors({ origin: 'http://localhost:3000' }));
-
 
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 const __dirname = path.resolve();
@@ -29,17 +34,28 @@ app.set('views', path.join(__dirname, 'public/views'));
 // app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
-// Sessions allow us to Contact data on visitors from request to request
+/* Database */
+const SessionStore = MongoStore.create({
+    mongoUrl: process.env.CLOUD_DB_CONN,
+    collectionName: "sessions"
+});
+
+// Sessions allow to Contact data on visitors from request to request
 // This keeps admins logged in and allows to send flash messages
-// app.use(
-//     session({
-//       secret: process.env.SECRET,
-//       key: process.env.KEY,
-//       resave: false,
-//       saveUninitialized: false,
-//       store: MongoStore.create({ mongoUrl: process.env.DATABASE }),
-//     })
-//   );
+app.use(session({
+    secret: process.env.JWT_SECRET,
+    // key: process.env.KEY,
+    resave: false,
+    saveUninitialized: true, // DAMN moment when i set this to false
+    store: SessionStore,
+    cookie: {
+        maxAge: 1000 * 10 // * 60 * 24 // 1 day
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // pass variables to templates + all requests
 // app.use((req, res, next) => {
@@ -54,8 +70,16 @@ app.set('view engine', 'ejs');
 //     next();
 //   });
 
-app.get('/', (req, res) => {
-    res.status(200).send('Hello World!!');
+app.get('/', (req, res, next) => {
+    if (req.session.viewCound) {
+        req.session.viewCound++
+    } else {
+        req.session.viewCound = 1
+    }
+    res.status(200).json({
+        success: true,
+        message: `Hello World!! ${req.session.viewCound} times`,
+        authenticated: `${req.isAuthenticated()}`});
 });
 
 app.use('/friend', friendRoutes);
