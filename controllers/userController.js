@@ -56,8 +56,8 @@ export const loginUser = async (req, res, next) => {
     } catch (error) {
         next(unexceptedError(error));
     }
-    passport.authenticate('local', { failureRedirect: '/user/login-fail', successRedirect: '/user/login-success' })
-        (req, res, next);
+    passport.authenticate('local', { failureRedirect: '/user/login-fail', successRedirect: '/user/login-success' })(req, res, next);
+
 
     /* Check if the user already exists*/
     // const user = await User.findOne({ email: req.body.email });

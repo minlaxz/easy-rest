@@ -20,7 +20,7 @@ router.get('/login-success', (req, res) => {
 
 router.post('/logout', (req, res) => {
     if (req.isAuthenticated()) req.logOut()
-    res.status(200).redirect('/');
+    res.status(302).redirect('/');
 })
 
 export default router;
