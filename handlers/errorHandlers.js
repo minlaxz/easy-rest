@@ -49,6 +49,6 @@ export const prodErrors = (err, req, res, next) => {
     }
     res.status(err.status || 500).json({
         success: err.success || false,
-        message: err.message || `Guess what, this is internal error please report.`
+        message: err.message || `Gracefully handled this internal error, please report.`
     });
 };

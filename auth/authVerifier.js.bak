@@ -1,3 +1,4 @@
+/* Deprecated JWT Method */
 import jwt from "jsonwebtoken";
 
 // for now i do not compare the hash
