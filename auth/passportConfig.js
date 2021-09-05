@@ -1,3 +1,4 @@
+/* Deprecated Session Authentication Method */
 import LocalStrategy from 'passport-local';
 import passport from 'passport';
 import { validatePassword } from '../utils/passwordUtil.js';

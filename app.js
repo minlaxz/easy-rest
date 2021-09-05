@@ -9,8 +9,9 @@ import notFoundRoutes from './routes/404Route.js';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import passport from 'passport';
-import './auth/passportConfig.js';
+
+// import './auth/passportConfig.js'; /* session auth */
+// import './auth/passportJwtConfig.js'; /* jwt auth */
 
 const app = express();
 dotenv.config({ path: "./.env" });
@@ -34,14 +35,16 @@ app.set('views', path.join(__dirname, 'public/views'));
 // app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 
-/* Database */
+/* Store Session in Database */
 const SessionStore = MongoStore.create({
     mongoUrl: process.env.CLOUD_DB_CONN,
     collectionName: "sessions"
 });
 
-// Sessions allow to Contact data on visitors from request to request
-// This keeps admins logged in and allows to send flash messages
+/* 
+Sessions allow to Contact data on visitors from request to request
+This keeps admins logged in and allows to send flash messages 
+*/
 app.use(session({
     secret: process.env.JWT_SECRET,
     // key: process.env.KEY,
@@ -53,8 +56,10 @@ app.use(session({
     }
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+/* Using Custom Strategy */
+// app.use(passport.initialize());
+/* Session authentication */
+// app.use(passport.session()); 
 
 
 // pass variables to templates + all requests
@@ -71,15 +76,12 @@ app.use(passport.session());
 //   });
 
 app.get('/', (req, res, next) => {
-    if (req.session.viewCound) {
-        req.session.viewCound++
-    } else {
-        req.session.viewCound = 1
-    }
+    req.session?.viewCound ? req.session.viewCound++ : req.session.viewCound = 1;
     res.status(200).json({
         success: true,
         message: `Hello World!! ${req.session.viewCound} times`,
-        authenticated: `${req.isAuthenticated()}`});
+        authenticated: `${req.isAuthenticated()}`
+    });
 });
 
 app.use('/friend', friendRoutes);

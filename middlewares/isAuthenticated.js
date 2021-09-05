@@ -4,4 +4,4 @@ export const isAuthenticated = (req, res, next) => {
     } else {
         res.sendStatus(401);
     }
-}
+};
