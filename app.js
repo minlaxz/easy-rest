@@ -80,7 +80,7 @@ app.get('/', (req, res, next) => {
     res.status(200).json({
         success: true,
         message: `Hello World!! ${req.session.viewCound} times`,
-        authenticated: `${req.isAuthenticated()}`
+        // authenticated: `${req.isAuthenticated()}`
     });
 });
 
