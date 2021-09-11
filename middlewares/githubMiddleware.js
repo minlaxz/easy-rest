@@ -1,14 +1,12 @@
-import { githubValidator } from "../validators/githubValidator.js";
+import { githubValidator } from "../validators/index.js";
 
-export const isValid = async (req, res, next) => {
-    try {
-        const { error } = await githubValidator(req.query);
-        if (error) return res.status(400).json({
-            error: error.details[0].message,
-            message: "Missing Some Queries"
-        })
-    } catch (error) {
-        next(error);
-    }
-    next();
+export const isValidBody = (req, res, next) => {
+    githubValidator(req.query)
+        .then(({ error }) => error
+            ? res.status(400).json({
+                error: error.details[0].message,
+                message: "Missing Some Queries"
+            })
+            : next())
+        .catch(error => next(error))
 }

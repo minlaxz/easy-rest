@@ -1,5 +1,10 @@
 import Joi from 'joi';
 
+/**
+ * @description Validates user input for registration
+ * @param {object} data - The request body object
+ * @returns {object} - The error object
+ */
 export const userRegisterValidator = async (data) => {
     const schema = Joi.object({
         username: Joi.string()
@@ -19,6 +24,11 @@ export const userRegisterValidator = async (data) => {
     return schema.validate(data);
 }
 
+/**
+ * @description Validates user input for login
+ * @param {object} data - The request body object
+ * @returns {object} - The error object
+ */
 export const userLoginValidator = async (data) => {
     const schema = Joi.object({
         email: Joi.string()
