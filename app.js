@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 /* Handlers */
 import { notFound, devErrors, prodErrors } from './handlers/errorHandlers.js'
 /* Routes */
@@ -14,23 +15,14 @@ import githubRoutes from './routes/githubRoute.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
+import { rateLimiter } from './middlewares/rateLimitMiddleware.js';
+
 /* Commented out for Using custom JWT strategy */
 // import './auth/passportConfig.js'; /* session auth */
 // import './auth/passportJwtConfig.js'; /* jwt auth */
 const app = express();
-
-if (process.env.NODE_ENV === "production") {
-    dotenv.config({ path: "./.env" });
-    console.log("App is loaded for Production.");
-    app.set("PORT", 3001);
-    app.set("CONN", process.env.CLOUD_DB_CONN);
-} else {
-    dotenv.config({ path: "./.env" });
-    console.log("App is loaded for Development.");
-    app.set("PORT", process.env.PORT)
-    app.set("CONN", process.env.CLOUD_DB_CONN);
-};
-
+// app.disable('x-powered-by');
+app.use(helmet());
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 /* serves up static files from the public folder. Anything in public/ will just be served up as the file it is */
@@ -41,13 +33,23 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 /* Set 'views' directory for any views being rendered res.render() */
-// app.set('views', path.join(__dirname, 'public/views'));
-
-/* Set view engine as EJS */
-// app.engine('html', require('ejs').renderFile);
 // app.set('view engine', 'ejs');
+
+
+if (process.env.NODE_ENV === "production") {
+    dotenv.config({ path: "./.env" });
+    console.log("App is loaded for Production.");
+    app.set("MODE", "production");
+    app.set("PORT", 3001);
+    app.set("CONN", process.env.CLOUD_DB_CONN);
+} else {
+    dotenv.config({ path: "./.env" });
+    console.log("App is loaded for Development.");
+    app.set("MODE", "development");
+    app.set("PORT", process.env.PORT)
+    app.set("CONN", process.env.CLOUD_DB_CONN);
+};
 
 /* Store Session in Database */
 const SessionStore = MongoStore.create({
@@ -66,6 +68,7 @@ app.use(session({
     saveUninitialized: true, /* DAMN moment when I set this to false */
     store: SessionStore,
     cookie: {
+        secure: app.get("MODE") === "production" ? true : false,
         maxAge: 1000 * 10 // * 60 * 24 // 1 day
     }
 }));
@@ -88,6 +91,8 @@ app.use(session({
 //     next();
 //   });
 
+app.use('/', rateLimiter); /* Just for now */
+
 app.get('/', (req, res, next) => {
     req.session?.viewCound ? req.session.viewCound++ : req.session.viewCound = 1;
     res.status(200).json({
@@ -97,6 +102,13 @@ app.get('/', (req, res, next) => {
         // authenticated: `${req.isAuthenticated()}`
     });
 });
+
+
+
+// app.use('/ip', limiter)
+app.get('/ip', rateLimiter, (req, res) => {
+    res.send(req.ip)
+})
 
 // app.use('/friend', friendRoutes);
 app.use('/protected', protectedRoutes);

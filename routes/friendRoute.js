@@ -1,10 +1,12 @@
 import express from 'express';
+import { Mongoose } from 'mongoose';
 import * as friendController from '../controllers/friendController.js';
 
 const router = express.Router();
 
 router.use('/:id', (req, res, next) => {
-    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (Mongoose.Types.ObjectId.isValid(req.params.id)) {
+        // if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         next();
     } else {
         res.status(302).redirect('/notfound?type=friend_id');
