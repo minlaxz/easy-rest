@@ -16,6 +16,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
 import { rateLimiter } from './middlewares/rateLimitMiddleware.js';
+import { Response } from './responses/generalResponse.js';
 
 /* Commented out for Using custom JWT strategy */
 // import './auth/passportConfig.js'; /* session auth */
@@ -91,28 +92,15 @@ app.use(session({
 //     next();
 //   });
 
-app.use('/', rateLimiter); /* Just for now */
-
 app.get('/', (req, res, next) => {
     req.session?.viewCound ? req.session.viewCound++ : req.session.viewCound = 1;
-    res.status(200).json({
-        success: true,
-        authentication: false, /* this route should not proceed about authentication process on frontend */
-        message: `Hello World!! ${req.session.viewCound} times`,
-        // authenticated: `${req.isAuthenticated()}`
-    });
+    return new Response(res, `Hello World!! ${req.session.viewCound} times`)
+        .welcome();
 });
 
-
-
-// app.use('/ip', limiter)
-app.get('/ip', rateLimiter, (req, res) => {
-    res.send(req.ip)
-})
-
 // app.use('/friend', friendRoutes);
-app.use('/protected', protectedRoutes);
-app.use('/user', userRoutes);
+app.use('/protected', rateLimiter, protectedRoutes);
+app.use('/user', rateLimiter, userRoutes);
 app.use('/github', githubRoutes);
 app.use('/notfound', notFoundRoutes);
 
@@ -121,12 +109,12 @@ app.use('/notfound', notFoundRoutes);
 app.use(notFound);
 
 /* Otherwise this was a really bad unexpected error */
-if (process.env.NODE_ENV === "production") {
-    /* production error handler */
-    app.use(prodErrors);
+if (process.env.NODE_ENV === "development") {
+    /* Development Error Handler - Prints stack trace */
+    app.use(devErrors);
 }
 
-/* Development Error Handler - Prints stack trace */
-app.use(devErrors);
+/* production error handler or if somthing went wrong, just remove verbosity */
+app.use(prodErrors);
 
 export default app;

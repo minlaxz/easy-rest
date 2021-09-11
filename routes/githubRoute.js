@@ -1,6 +1,6 @@
 import express from 'express';
 import { lastcommit } from '../controllers/githubController.js';
-import { isValid } from '../middlewares/githubMiddleware.js';
+import { isValidBody } from '../middlewares/githubMiddleware.js';
 
 const router = express.Router();
 
@@ -13,6 +13,6 @@ router.get("/", async (req, res, next) => {
 })
 
 
-router.use("/lastcommit", isValid, lastcommit)
+router.use("/lastcommit", isValidBody, lastcommit)
 
 export default router;
