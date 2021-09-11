@@ -3,6 +3,9 @@ import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import csurf from 'csurf';
+import cookieParser from 'cookie-parser';
+
 /* Handlers */
 import { notFound, devErrors, prodErrors } from './handlers/errorHandlers.js'
 /* Routes */
@@ -22,21 +25,6 @@ import { Response } from './responses/generalResponse.js';
 // import './auth/passportConfig.js'; /* session auth */
 // import './auth/passportJwtConfig.js'; /* jwt auth */
 const app = express();
-// app.disable('x-powered-by');
-app.use(helmet());
-app.use(cors({ origin: 'http://localhost:3000' }));
-
-/* serves up static files from the public folder. Anything in public/ will just be served up as the file it is */
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "public")));
-
-/* Takes the raw requests and turns them into usable objects */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-/* Set 'views' directory for any views being rendered res.render() */
-// app.set('view engine', 'ejs');
-
 
 if (process.env.NODE_ENV === "production") {
     dotenv.config({ path: "./.env" });
@@ -51,6 +39,18 @@ if (process.env.NODE_ENV === "production") {
     app.set("PORT", process.env.PORT)
     app.set("CONN", process.env.CLOUD_DB_CONN);
 };
+
+app.use(helmet());
+app.use(cors({ origin: 'http://localhost:3000' }));
+
+/* serves up static files from the public folder. Anything in public/ will just be served up as the file it is */
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(cookieParser());
+/* Takes the raw requests and turns them into usable objects */
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 /* Store Session in Database */
 const SessionStore = MongoStore.create({
@@ -74,6 +74,12 @@ app.use(session({
     }
 }));
 
+/* CSRF */
+app.use(csurf({ cookie: true }))
+
+/* Set 'views' directory for any views being rendered res.render() */
+// app.set('view engine', 'ejs');
+
 /* Commented out for Using Custom JWT strategy */
 // app.use(passport.initialize());
 // app.use(passport.session()); /* Session authentication */
@@ -94,7 +100,7 @@ app.use(session({
 
 app.get('/', (req, res, next) => {
     req.session?.viewCound ? req.session.viewCound++ : req.session.viewCound = 1;
-    return new Response(res, `Hello World!! ${req.session.viewCound} times`)
+    return new Response(res, `Hello World!! ${req.session.viewCound} times, ${req.csrfToken()}`)
         .welcome();
 });
 
