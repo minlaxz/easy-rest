@@ -9,7 +9,7 @@ export const userRegisterValidator = async (data) => {
             .required(),
 
         password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+            .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'))
             .required(),
 
         email: Joi.string()
@@ -25,7 +25,7 @@ export const userLoginValidator = async (data) => {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'dev', 'org'] } })
             .required(),
         password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+            .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'))
             .required()
     });
     return schema.validate(data);
