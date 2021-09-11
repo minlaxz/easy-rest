@@ -1,5 +1,8 @@
 import express from 'express';
-import * as userController from '../controllers/userController.js';
+import { loginUser, registerUser } from '../controllers/userController.js';
+import { isValidUserLogin, isValidUserSignup } from '../middlewares/userMiddleware.js';
+import { userHelloRes } from '../responses/userResponse.js';
+
 const router = express.Router();
 
 // router.use((req, res, next) => {
@@ -8,23 +11,18 @@ const router = express.Router();
 // })
 
 router.get('/', async (req, res, next) => {
-    res.status(200).json({
-        success: true,
-        message: "OK"
-    })
+    return userHelloRes(res, `This is user route.`);
 })
-router.post('/signup', userController.registerUser);
-router.post('/login', userController.loginUser);
+router.post('/signup', isValidUserSignup, registerUser);
+router.post('/login', isValidUserLogin, loginUser);
 
 /* This is for session authentication */
 // router.get('/login-fail', (req, res) => {
 //     res.sendStatus(401);
 // })
-
 // router.get('/login-success', (req, res) => {
 //     res.status(200).redirect('/');
 // })
-
 // router.post('/logout', (req, res) => {
 //     if (req.isAuthenticated()) req.logOut()
 //     res.status(302).redirect('/');

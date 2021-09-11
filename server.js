@@ -1,22 +1,18 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import app from './app.js';
 // import glob from 'glob';
 // import path from 'path';
 
-// Make sure it is node 10.0+
+/* Make sure it is node 10.0+ */
 const [major, minor] = process.versions.node.split(".").map(parseFloat);
 if (major < 10 || (major === 10 && minor <= 0)) {
     console.log(
-        "Please go to nodejs.org and download version 10 or greater. 👌\n "
+        `Please go to nodejs.org and download version 10 or greater. 👌\n `
     );
     process.exit();
 }
 
-dotenv.config({ path: "./.env" });
-
-let DB_CONN = process.env.CLOUD_DB_CONN;
-mongoose.connect(DB_CONN, //closure
+mongoose.connect(app.get("CONN"),
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -37,8 +33,7 @@ mongoose.connection.on("error", (err) => {
 // glob.sync(path.join(__dirname, './models/*.js')).forEach((file) => {
 //     require(path.resolve(file));
 // });
-
-app.set("port", process.env.PORT || 3001);
-const server = app.listen(app.get("port"), () => {
-    console.log(`🚀 Server is listening on port ${server.address()?.port}`);
+const PORT = app.get("PORT") || 6969; /* 6969 is an error 👻 */
+const server = app.listen(PORT, () => {
+    console.log(`🚀 Server is listening on port ${server.address().address}:${PORT}`);
 });

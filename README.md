@@ -46,3 +46,7 @@
 - Eh, you can also debug as you would do in a normal project and yup this is insane project
 
 # It's always a good practice to check `.env` and `compose file` for any necessary changes
+
+TODO if this is in production mode, .env should not be loaded.
+
+controllers dont care about validations.
