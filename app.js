@@ -1,10 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
+// import path from 'path';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
-import csurf from 'csurf';
-import cookieParser from 'cookie-parser';
+// import csurf from 'csurf';
 
 /* Handlers */
 import { notFound, devErrors, prodErrors } from './handlers/errorHandlers.js'
@@ -20,6 +19,7 @@ import MongoStore from 'connect-mongo';
 
 import { rateLimiter } from './middlewares/rateLimitMiddleware.js';
 import { Response } from './responses/generalResponse.js';
+// import passport from 'passport';
 
 /* Commented out for Using custom JWT strategy */
 // import './auth/passportConfig.js'; /* session auth */
@@ -41,13 +41,12 @@ if (process.env.NODE_ENV === "production") {
 };
 
 app.use(helmet());
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: 'http://127.0.0.1:3000' }));
 
 /* serves up static files from the public folder. Anything in public/ will just be served up as the file it is */
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "public")));
+// const __dirname = path.resolve();
+// app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cookieParser());
 /* Takes the raw requests and turns them into usable objects */
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -69,20 +68,23 @@ app.use(session({
     saveUninitialized: true, /* DAMN moment when I set this to false */
     store: SessionStore,
     cookie: {
-        secure: app.get("MODE") === "production" ? true : false,
-        maxAge: 1000 * 10 // * 60 * 24 // 1 day
+        httpOnly: true,
+        secure: app.get("MODE") === "production",
+        maxAge: 60 * 1e3 * 5, // 5 minutes
+        sameSite: app.get("MODE") === "production" ? 'none' : 'lax',
     }
 }));
 
 /* CSRF */
-app.use(csurf({ cookie: true }))
+// app.use(csurf({ cookie: false }))
+// const csurfProtection = csurf({ cookie: false });
 
 /* Set 'views' directory for any views being rendered res.render() */
 // app.set('view engine', 'ejs');
 
 /* Commented out for Using Custom JWT strategy */
 // app.use(passport.initialize());
-// app.use(passport.session()); /* Session authentication */
+// app.use(passport.session());
 
 
 /* pass variables to templates + all requests */
@@ -99,8 +101,9 @@ app.use(csurf({ cookie: true }))
 //   });
 
 app.get('/', (req, res, next) => {
+    // res.cookie('XSRF-TOKEN', req.csrfToken());
     req.session?.viewCound ? req.session.viewCound++ : req.session.viewCound = 1;
-    return new Response(res, `Hello World!! ${req.session.viewCound} times, ${req.csrfToken()}`)
+    return new Response(res, `Hello World!! ${req.session.viewCound} times`)
         .welcome();
 });
 

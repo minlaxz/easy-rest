@@ -34,6 +34,7 @@ mongoose.connection.on("error", (err) => {
 //     require(path.resolve(file));
 // });
 const PORT = app.get("PORT") || 6969; /* 6969 is an error 👻 */
-const server = app.listen(PORT, () => {
-    console.log(`🚀 Server is listening on port ${server.address().address}:${PORT}`);
+
+app.listen(PORT, () => {
+    console.log(`🚀 Server is listening on port ${PORT}`);
 });

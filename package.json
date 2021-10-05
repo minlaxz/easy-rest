@@ -1,11 +1,11 @@
 {
   "name": "easy-rest",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./server.js --ignore public/",
+    "dev": "nodemon ./server.js",
     "start": "NODE_ENV=production node ./server.js --unhandled-rejections=strict",
     "gen": "node ./lib/generateKey.js"
   },

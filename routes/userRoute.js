@@ -5,11 +5,6 @@ import { userHelloRes } from '../responses/userResponse.js';
 
 const router = express.Router();
 
-// router.use((req, res, next) => {
-//     console.log(req)
-//     next();
-// })
-
 router.get('/', async (req, res, next) => {
     return userHelloRes(res, `This is user route.`);
 })
