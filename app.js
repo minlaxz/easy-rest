@@ -27,7 +27,6 @@ import { Response } from './responses/generalResponse.js';
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
-    dotenv.config({ path: "./.env" });
     console.log("App is loaded for Production.");
     app.set("MODE", "production");
     app.set("PORT", 3001);
