@@ -19,7 +19,7 @@
   "author": "minlaxz",
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "connect-mongo": "^4.5.0",
+    "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
